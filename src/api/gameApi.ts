@@ -1,5 +1,5 @@
 import useGameStore from '../store/useGameStore'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import { 
     signInWithEmailAndPassword, 
     createUserWithEmailAndPassword, 
@@ -62,6 +62,7 @@ export const authApi = {
             const user = userCredential.user;
             const initialProfile = {
                 userId: user.uid,
+                email: data.email, // Guardamos el email para poder buscarlo por usuario después
                 username: data.username || 'Cazador',
                 level: 1,
                 currentXp: 0,
@@ -109,7 +110,25 @@ export const authApi = {
     },
     login: async (data: any) => {
         if (isFirebaseConfigured && auth) {
-            const email = data.email || data.usernameOrEmail;
+            let email = data.email || data.usernameOrEmail;
+            
+            // Si el input no es un correo (no contiene '@'), buscamos el username en Firestore para obtener el email
+            if (email && !email.includes('@') && db) {
+                try {
+                    const usersRef = collection(db, "users");
+                    const q = query(usersRef, where("username", "==", email));
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        const userDoc = querySnapshot.docs[0].data();
+                        if (userDoc.email) {
+                            email = userDoc.email;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error resolviendo username a email:", e);
+                }
+            }
+
             const userCredential = await signInWithEmailAndPassword(auth, email, data.password);
             const user = userCredential.user;
             const snap = await getDoc(doc(db, "users", user.uid));
