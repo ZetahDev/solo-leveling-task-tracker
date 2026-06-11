@@ -109,7 +109,8 @@ export const authApi = {
     },
     login: async (data: any) => {
         if (isFirebaseConfigured && auth) {
-            const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+            const email = data.email || data.usernameOrEmail;
+            const userCredential = await signInWithEmailAndPassword(auth, email, data.password);
             const user = userCredential.user;
             const snap = await getDoc(doc(db, "users", user.uid));
             if (snap.exists()) {
