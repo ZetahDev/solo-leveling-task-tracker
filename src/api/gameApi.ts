@@ -185,7 +185,46 @@ export const authApi = {
             if (snap.exists()) {
                 return { data: snap.data() };
             }
-            throw new Error("User profile not found in database.");
+            
+            // Auto-create a default profile if it does not exist in Firestore
+            const usernameFromEmail = user.email ? user.email.split('@')[0] : 'Cazador';
+            const initialProfile = {
+                userId: user.uid,
+                email: user.email || email,
+                username: usernameFromEmail,
+                username_lowercase: usernameFromEmail.toLowerCase(),
+                level: 1,
+                currentXp: 0,
+                totalXp: 0,
+                xpToNextLevel: 500,
+                gemBalance: 50,
+                dailyStreak: 0,
+                longestDailyStreak: 0,
+                flowStreak: 0,
+                pomodoroFlowStreak: 0,
+                xpBoostActive: false,
+                currentTheme: 'solo-leveling',
+                stats: { STR: 10, INT: 10, AGI: 10, VIT: 10 },
+                tasks: useGameStore.getState().tasks,
+                customRewards: useGameStore.getState().customRewards,
+                purchasedItems: [],
+                games: [],
+                themesInventory: ['solo-leveling'],
+                pomodoroHistory: [],
+                gymConsecutiveDays: 0,
+                classChangedToMonarcaDeLaNoche: false
+            };
+            
+            try {
+                await setDoc(doc(db, "users", user.uid), initialProfile);
+                await setDoc(doc(db, "usernames", initialProfile.username_lowercase), {
+                    email: initialProfile.email,
+                    userId: user.uid
+                });
+            } catch (fsErr) {
+                console.error("Error creating missing user profile in Firestore:", fsErr);
+            }
+            return { data: initialProfile };
         } else {
             await delay();
             const store = useGameStore.getState();
