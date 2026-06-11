@@ -22,13 +22,13 @@ const RegisterPage = () => {
     const validate = () => {
         const errors: any = {}
         if (form.username.length < 3)
-            errors.username = 'Username must be at least 3 characters'
+            errors.username = 'El nombre de usuario debe tener al menos 3 caracteres'
         if (!form.email.includes('@'))
-            errors.email = 'Enter a valid email address'
+            errors.email = 'Ingresa un correo electrónico válido'
         if (form.password.length < 8)
-            errors.password = 'Password must be at least 8 characters'
+            errors.password = 'La contraseña debe tener al menos 8 caracteres'
         if (form.password !== form.confirmPassword)
-            errors.confirmPassword = 'Passwords do not match'
+            errors.confirmPassword = 'Las contraseñas no coinciden'
         return errors
     }
 
@@ -59,7 +59,7 @@ const RegisterPage = () => {
             setAuth(response.data)
             navigate('/tasks')
         } catch (err: any) {
-            const msg = err.message || err.code || 'Registration failed. Please try again.'
+            const msg = err.message || err.code || 'El registro falló. Por favor intente de nuevo.'
             setError(msg)
         } finally {
             setLoading(false)
@@ -86,11 +86,11 @@ const RegisterPage = () => {
                     <div className="text-5xl mb-3">🚀</div>
                     <h1 className="text-3xl font-black"
                         style={{ color: 'var(--text-primary)' }}>
-                        Workspace
+                        Espacio de Trabajo
                     </h1>
                     <p className="mt-2 text-sm"
                        style={{ color: 'var(--text-secondary)' }}>
-                        Begin your productivity journey
+                        Comienza tu viaje de productividad
                     </p>
                 </div>
 
@@ -101,7 +101,7 @@ const RegisterPage = () => {
 
                     <h2 className="text-xl font-bold mb-6 text-center"
                         style={{ color: 'var(--text-primary)' }}>
-                        Create Account
+                        Crear Cuenta
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -109,14 +109,14 @@ const RegisterPage = () => {
                         <div>
                             <label className="block text-sm font-bold mb-1.5"
                                    style={{ color: 'var(--text-secondary)' }}>
-                                Username
+                                Nombre de Usuario
                             </label>
                             <input
                                 type="text"
                                 name="username"
                                 value={form.username}
                                 onChange={handleChange}
-                                placeholder="Choose a username"
+                                placeholder="Elige tu nombre de usuario"
                                 required
                                 minLength={3}
                                 maxLength={50}
@@ -139,14 +139,14 @@ const RegisterPage = () => {
                         <div>
                             <label className="block text-sm font-bold mb-1.5"
                                    style={{ color: 'var(--text-secondary)' }}>
-                                Email
+                                Correo Electrónico
                             </label>
                             <input
                                 type="email"
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                placeholder="Enter your email"
+                                placeholder="Ingresa tu correo"
                                 required
                                 className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-colors"
                                 style={{
@@ -167,14 +167,14 @@ const RegisterPage = () => {
                         <div>
                             <label className="block text-sm font-bold mb-1.5"
                                    style={{ color: 'var(--text-secondary)' }}>
-                                Password
+                                Contraseña
                             </label>
                             <input
                                 type="password"
                                 name="password"
                                 value={form.password}
                                 onChange={handleChange}
-                                placeholder="Minimum 8 characters"
+                                placeholder="Mínimo 8 caracteres"
                                 required
                                 minLength={8}
                                 className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-colors"
@@ -196,14 +196,14 @@ const RegisterPage = () => {
                         <div>
                             <label className="block text-sm font-bold mb-1.5"
                                    style={{ color: 'var(--text-secondary)' }}>
-                                Confirm Password
+                                Confirmar Contraseña
                             </label>
                             <input
                                 type="password"
                                 name="confirmPassword"
                                 value={form.confirmPassword}
                                 onChange={handleChange}
-                                placeholder="Repeat your password"
+                                placeholder="Repite tu contraseña"
                                 required
                                 className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-colors"
                                 style={{
@@ -247,18 +247,18 @@ const RegisterPage = () => {
                                 backgroundColor: 'var(--flow-green)',
                                 color: '#000',
                             }}>
-                            {loading ? 'Creating account...' : 'Start Your Journey 🚀'}
+                            {loading ? 'Creando cuenta...' : 'Comenzar el Viaje 🚀'}
                         </button>
                     </form>
 
                     {/* Footer */}
                     <p className="text-center text-sm mt-6"
                        style={{ color: 'var(--text-secondary)' }}>
-                        Already have an account?{' '}
+                        ¿Ya tienes una cuenta?{' '}
                         <Link to="/login"
                               style={{ color: 'var(--xp-blue)' }}
                               className="font-bold hover:underline transition-colors hover:brightness-125">
-                            Sign in
+                            Inicia sesión
                         </Link>
                     </p>
                 </div>

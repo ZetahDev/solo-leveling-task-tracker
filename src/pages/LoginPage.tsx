@@ -30,7 +30,7 @@ const LoginPage = () => {
             setAuth(response.data)
             navigate('/tasks')
         } catch (err: any) {
-            const msg = err.message || err.code || 'Invalid credentials. Please try again.'
+            const msg = err.message || err.code || 'Credenciales inválidas. Por favor intente de nuevo.'
             setError(msg)
         } finally {
             setLoading(false)
@@ -51,11 +51,11 @@ const LoginPage = () => {
                     <div className="text-5xl mb-3">🚀</div>
                     <h1 className="text-3xl font-black"
                         style={{ color: 'var(--text-primary)' }}>
-                        Workspace
+                        Espacio de Trabajo
                     </h1>
                     <p className="mt-2 text-sm"
                        style={{ color: 'var(--text-secondary)' }}>
-                        Sign in to continue your journey
+                        Inicia sesión para continuar tu viaje
                     </p>
                 </div>
 
@@ -66,7 +66,7 @@ const LoginPage = () => {
 
                     <h2 className="text-xl font-bold mb-6 text-center"
                         style={{ color: 'var(--text-primary)' }}>
-                        Welcome Back
+                        Bienvenido de Nuevo
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -74,14 +74,14 @@ const LoginPage = () => {
                         <div>
                             <label className="block text-sm font-bold mb-1.5"
                                    style={{ color: 'var(--text-secondary)' }}>
-                                Username or Email
+                                Usuario o Correo Electrónico
                             </label>
                             <input
                                 type="text"
                                 name="usernameOrEmail"
                                 value={form.usernameOrEmail}
                                 onChange={handleChange}
-                                placeholder="Enter username or email"
+                                placeholder="Ingresa tu usuario o correo"
                                 required
                                 className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-colors"
                                 style={{
@@ -98,14 +98,14 @@ const LoginPage = () => {
                         <div>
                             <label className="block text-sm font-bold mb-1.5"
                                    style={{ color: 'var(--text-secondary)' }}>
-                                Password
+                                Contraseña
                             </label>
                             <input
                                 type="password"
                                 name="password"
                                 value={form.password}
                                 onChange={handleChange}
-                                placeholder="Enter password"
+                                placeholder="Ingresa tu contraseña"
                                 required
                                 className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-colors"
                                 style={{
@@ -145,18 +145,18 @@ const LoginPage = () => {
                                 backgroundColor: 'var(--xp-blue)',
                                 color: '#fff',
                             }}>
-                            {loading ? 'Signing in...' : 'Sign In'}
+                            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                         </button>
                     </form>
 
                     {/* Footer */}
                     <p className="text-center text-sm mt-6"
                        style={{ color: 'var(--text-secondary)' }}>
-                        No account?{' '}
+                        ¿No tienes cuenta?{' '}
                         <Link to="/register"
                               style={{ color: 'var(--xp-blue)' }}
                               className="font-bold hover:underline transition-colors hover:brightness-125">
-                            Create one
+                            Crea una aquí
                         </Link>
                     </p>
                 </div>

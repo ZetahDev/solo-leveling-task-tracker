@@ -26,7 +26,7 @@ const FocusPage = () => {
         <div className="flex justify-center mb-12">
           <SkeletonBox width="300px" height="300px" className="rounded-full" />
         </div>
-
+ 
         <div className="max-w-md mx-auto">
           <SkeletonBox width="100%" height="14rem" className="rounded-2xl" />
         </div>
@@ -42,11 +42,11 @@ const FocusPage = () => {
     >
       <div className="text-center mb-10">
         <h2 className="text-3xl font-black mb-3" style={{ color: 'var(--text-primary)' }}>
-          Deep Work Protocol
+          Protocolo de Trabajo Profundo
         </h2>
         <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-          Complete consecutive 25-minute sessions to build your Flow Streak. <br/>
-          <span style={{ color: 'var(--flow-green)' }}>Every completed session increases your global XP multiplier.</span>
+          Completa sesiones consecutivas de 25 minutos para aumentar tu Racha de Flujo. <br/>
+          <span style={{ color: 'var(--flow-green)' }}>Cada sesión completada aumenta tu multiplicador de XP global.</span>
         </p>
       </div>
 
@@ -63,8 +63,7 @@ const FocusPage = () => {
                   border: '1px solid var(--border-subtle)',
                   color: 'var(--text-secondary)',
               }}>
-              🎯 Complete your first session to start building
-              your Flow Streak and earn bonus XP multipliers
+              🎯 Completa tu primera sesión para comenzar a acumular tu Racha de Flujo y ganar multiplicadores de XP adicionales.
           </motion.div>
       )}
 
@@ -76,18 +75,18 @@ const FocusPage = () => {
           color: 'var(--text-secondary)' 
         }}
       >
-        <h4 className="font-bold mb-3 text-white">How it works:</h4>
+        <h4 className="font-bold mb-3 text-white">Cómo funciona:</h4>
         <ul className="list-disc pl-5 space-y-2">
-          <li>Complete a 25m session to earn Base XP + Gems.</li>
-          <li>Each consecutive session adds +0.2x to your XP multiplier.</li>
+          <li>Completa una sesión de 25m para ganar XP Base + Gemas.</li>
+          <li>Cada sesión consecutiva añade +0.2x a tu multiplicador de XP.</li>
           <li>
-            <span style={{ color: 'var(--flow-green)' }}>Pause &lt; 15 mins:</span> Full grace — streak continues.
+            <span style={{ color: 'var(--flow-green)' }}>Pausa &lt; 15 mins:</span> Gracia total — la racha continúa.
           </li>
           <li>
-            <span style={{ color: 'var(--streak-orange)' }}>Pause 15–30 mins:</span> Streak frozen — no progress, no reset.
+            <span style={{ color: 'var(--streak-orange)' }}>Pausa 15–30 mins:</span> Racha congelada — sin progreso, sin reinicio.
           </li>
           <li>
-            <span style={{ color: 'var(--danger-red)' }}>Pause &gt; 30 mins:</span> Streak resets to zero.
+            <span style={{ color: 'var(--danger-red)' }}>Pausa &gt; 30 mins:</span> La racha se restablece a cero.
           </li>
         </ul>
       </div>
