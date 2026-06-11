@@ -58,10 +58,8 @@ const RegisterPage = () => {
             })
             setAuth(response.data)
             navigate('/tasks')
-        } catch (err) {
-            const msg = err.response?.data?.message
-                || err.response?.data?.error
-                || 'Registration failed. Please try again.'
+        } catch (err: any) {
+            const msg = err.message || err.code || 'Registration failed. Please try again.'
             setError(msg)
         } finally {
             setLoading(false)

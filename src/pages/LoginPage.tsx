@@ -29,10 +29,8 @@ const LoginPage = () => {
             const response = await authApi.login(form)
             setAuth(response.data)
             navigate('/tasks')
-        } catch (err) {
-            const msg = err.response?.data?.message
-                || err.response?.data?.error
-                || 'Invalid credentials. Please try again.'
+        } catch (err: any) {
+            const msg = err.message || err.code || 'Invalid credentials. Please try again.'
             setError(msg)
         } finally {
             setLoading(false)

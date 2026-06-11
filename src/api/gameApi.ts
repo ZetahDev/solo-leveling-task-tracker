@@ -15,9 +15,12 @@ export const syncToFirebase = async () => {
     if (!isFirebaseConfigured || !auth || !auth.currentUser || !db) return;
     const userId = auth.currentUser.uid;
     const store = useGameStore.getState();
+    const username = store.username || 'Cazador';
+    const usernameLower = username.toLowerCase();
     const dataToSync = {
         userId,
-        username: store.username,
+        username: username,
+        username_lowercase: usernameLower,
         level: store.level,
         currentXp: store.currentXp,
         totalXp: store.totalXp,
@@ -41,6 +44,13 @@ export const syncToFirebase = async () => {
     };
     try {
         await setDoc(doc(db, "users", userId), dataToSync);
+        // Also verify mapping is synced
+        if (auth.currentUser.email) {
+            await setDoc(doc(db, "usernames", usernameLower), {
+                email: auth.currentUser.email,
+                userId
+            });
+        }
     } catch (e) {
         console.error("Error syncing to Firestore:", e);
     }
@@ -60,10 +70,13 @@ export const authApi = {
         if (isFirebaseConfigured && auth) {
             const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
             const user = userCredential.user;
+            const username = data.username || 'Cazador';
+            const usernameLower = username.toLowerCase().trim();
             const initialProfile = {
                 userId: user.uid,
                 email: data.email, // Guardamos el email para poder buscarlo por usuario después
-                username: data.username || 'Cazador',
+                username: username,
+                username_lowercase: usernameLower,
                 level: 1,
                 currentXp: 0,
                 totalXp: 0,
@@ -86,6 +99,14 @@ export const authApi = {
                 classChangedToMonarcaDeLaNoche: false
             };
             await setDoc(doc(db, "users", user.uid), initialProfile);
+            try {
+                await setDoc(doc(db, "usernames", usernameLower), {
+                    email: data.email,
+                    userId: user.uid
+                });
+            } catch (err) {
+                console.error("Error setting username mapping:", err);
+            }
             return { data: initialProfile };
         } else {
             await delay();
@@ -114,14 +135,43 @@ export const authApi = {
             
             // Si el input no es un correo (no contiene '@'), buscamos el username en Firestore para obtener el email
             if (email && !email.includes('@') && db) {
+                const usernameLower = email.toLowerCase().trim();
                 try {
-                    const usersRef = collection(db, "users");
-                    const q = query(usersRef, where("username", "==", email));
-                    const querySnapshot = await getDocs(q);
-                    if (!querySnapshot.empty) {
-                        const userDoc = querySnapshot.docs[0].data();
-                        if (userDoc.email) {
-                            email = userDoc.email;
+                    // 1. Intentar buscar directamente en la colección 'usernames' (O(1) por ID de documento)
+                    const nameDocRef = doc(db, "usernames", usernameLower);
+                    const nameDocSnap = await getDoc(nameDocRef);
+                    if (nameDocSnap.exists()) {
+                        const nameDocData = nameDocSnap.data();
+                        if (nameDocData.email) {
+                            email = nameDocData.email;
+                        }
+                    } else {
+                        // 2. Fallback: buscar en la colección de usuarios usando 'username_lowercase'
+                        const usersRef = collection(db, "users");
+                        const q = query(usersRef, where("username_lowercase", "==", usernameLower));
+                        let querySnapshot = await getDocs(q);
+                        
+                        if (querySnapshot.empty) {
+                            // 3. Fallback adicional: buscar usando 'username' tal cual se ingresó
+                            const qFallback = query(usersRef, where("username", "==", email));
+                            querySnapshot = await getDocs(qFallback);
+                        }
+                        
+                        if (!querySnapshot.empty) {
+                            const userDoc = querySnapshot.docs[0].data();
+                            if (userDoc.email) {
+                                email = userDoc.email;
+                                
+                                // Opcional: auto-crear la entrada en /usernames para futuras consultas rápidas
+                                try {
+                                    await setDoc(doc(db, "usernames", usernameLower), {
+                                        email: userDoc.email,
+                                        userId: userDoc.userId || querySnapshot.docs[0].id
+                                    });
+                                } catch (innerErr) {
+                                    console.warn("No se pudo persistir mapping del username en login fallback:", innerErr);
+                                }
+                            }
                         }
                     }
                 } catch (e) {
